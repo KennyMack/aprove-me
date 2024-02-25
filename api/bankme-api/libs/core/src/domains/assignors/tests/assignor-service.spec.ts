@@ -67,7 +67,6 @@ describe('AssignorDomainservice', () => {
       service.resetDomain();
 
       const result = await service.validate(vo);
-      console.log(service.getErrors());
 
       expect(service.getErrors().length).toStrictEqual(0);
       expect(result).toStrictEqual(true);
