@@ -2,7 +2,7 @@ name: Test Banki-me api
 
 on:
   push:
-    branches: ['main']
+    branches: ['dev']
   pull_request:
     branches: ['main']
 
@@ -16,10 +16,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
-        with: node-version ${{ matrix.node-version }}
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
 
       - name: Install dependencies
         run: yarn install
