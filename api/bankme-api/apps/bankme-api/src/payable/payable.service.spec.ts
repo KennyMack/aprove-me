@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PayableService } from './payable.service';
 import { PayableDomainService } from 'bme/core/domains/payables/payable-service';
 import { AssignorDomainService } from 'bme/core/domains/assignors/assignor-service';
-import { mock } from 'jest-mock-extended';
+import { mock, mockReset } from 'jest-mock-extended';
 import { IPayableDomainService } from 'bme/core/domains/payables/interfaces/payable-service.interface';
 import { IAssignorDomainService } from 'bme/core/domains/assignors/interfaces/assignor-service.interface';
 
@@ -20,6 +20,8 @@ describe('PayableService', () => {
       ],
     }).compile();
 
+    mockReset(assignorDomainService);
+    mockReset(payableDomainService);
     service = module.get<PayableService>(PayableService);
   });
 

@@ -22,9 +22,9 @@ import { AssignorDomainService } from './domains/assignors/assignor-service';
     PayableVO,
     PayableRepository,
     PayableDomainService,
-    AssignorRepository,
     Sequence,
     HttpResult,
+    AssignorRepository,
     AssignorDomainService,
   ],
   exports: [
@@ -36,9 +36,9 @@ import { AssignorDomainService } from './domains/assignors/assignor-service';
     PayableVO,
     PayableRepository,
     PayableDomainService,
-    AssignorRepository,
     Sequence,
     HttpResult,
+    AssignorRepository,
     AssignorDomainService,
   ],
 })

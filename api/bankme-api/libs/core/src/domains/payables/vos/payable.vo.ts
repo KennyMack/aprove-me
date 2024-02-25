@@ -10,6 +10,8 @@ export class PayableVO extends BaseVO {
     public readonly emissionDate: Date,
     public readonly assignorId: string,
     public readonly assignor: AssignorVO,
+    public readonly createdAt: Date = new Date(),
+    public readonly updateAt: Date = new Date(),
   ) {
     super(id);
   }

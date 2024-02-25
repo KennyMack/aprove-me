@@ -36,7 +36,7 @@ describe('AssignorDomainservice', () => {
         .mockReturnValue(Promise.resolve(true));
 
       service.resetDomain();
-      const result = await service.validate(vo);
+      const result = await service.validate(vo, true);
 
       expect(service.getErrors().length).toBeGreaterThanOrEqual(1);
       expect(result).toStrictEqual(false);
@@ -66,7 +66,7 @@ describe('AssignorDomainservice', () => {
 
       service.resetDomain();
 
-      const result = await service.validate(vo);
+      const result = await service.validate(vo, true);
 
       expect(service.getErrors().length).toStrictEqual(0);
       expect(result).toStrictEqual(true);

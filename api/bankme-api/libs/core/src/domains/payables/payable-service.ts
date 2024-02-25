@@ -55,6 +55,8 @@ export class PayableDomainService
       result.emissionDate,
       result.assignorId,
       null,
+      result.createdAt,
+      result.updateAt,
     );
   }
 
@@ -62,7 +64,16 @@ export class PayableDomainService
     const result = (await this.payableRepo.getAll()) ?? [];
 
     return result.map(
-      (x) => new PayableVO(x.id, x.value, x.emissionDate, x.assignorId, null),
+      (x) =>
+        new PayableVO(
+          x.id,
+          x.value,
+          x.emissionDate,
+          x.assignorId,
+          null,
+          x.createdAt,
+          x.updateAt,
+        ),
     );
   }
 
@@ -102,6 +113,8 @@ export class PayableDomainService
       removed.emissionDate,
       removed.assignorId,
       null,
+      removed.createdAt,
+      removed.updateAt,
     );
   }
 }
