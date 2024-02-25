@@ -30,7 +30,7 @@ export class PayableService {
 
       this.assignorService.resetDomain();
 
-      const validation = await this.assignorService.validate(assignorVO, true);
+      const validation = await this.assignorService.validate(assignorVO);
 
       if (!validation)
         return HttpResult.BadRequest(

@@ -28,23 +28,25 @@ describe('AssignorDomainservice', () => {
       const vo = AssignorMocks.convertAssignorToVO(assignor);
 
       assignorRepositoryMock.documentExists
-        .calledWith(assignor.document)
+        .calledWith(assignor.id, assignor.document)
         .mockReturnValue(Promise.resolve(true));
 
       assignorRepositoryMock.emailExists
-        .calledWith(assignor.email)
+        .calledWith(assignor.id, assignor.email)
         .mockReturnValue(Promise.resolve(true));
 
       service.resetDomain();
-      const result = await service.validate(vo, true);
+      const result = await service.validate(vo);
 
       expect(service.getErrors().length).toBeGreaterThanOrEqual(1);
       expect(result).toStrictEqual(false);
 
       expect(assignorRepositoryMock.documentExists).toHaveBeenCalledWith(
+        assignor.id,
         assignor.document,
       );
       expect(assignorRepositoryMock.emailExists).toHaveBeenCalledWith(
+        assignor.id,
         assignor.email,
       );
 
@@ -57,24 +59,26 @@ describe('AssignorDomainservice', () => {
       const vo = AssignorMocks.convertAssignorToVO(assignor);
 
       assignorRepositoryMock.documentExists
-        .calledWith(assignor.document)
+        .calledWith(assignor.id, assignor.document)
         .mockReturnValue(Promise.resolve(false));
 
       assignorRepositoryMock.emailExists
-        .calledWith(assignor.email)
+        .calledWith(assignor.id, assignor.email)
         .mockReturnValue(Promise.resolve(false));
 
       service.resetDomain();
 
-      const result = await service.validate(vo, true);
+      const result = await service.validate(vo);
 
       expect(service.getErrors().length).toStrictEqual(0);
       expect(result).toStrictEqual(true);
 
       expect(assignorRepositoryMock.documentExists).toHaveBeenCalledWith(
+        assignor.id,
         assignor.document,
       );
       expect(assignorRepositoryMock.emailExists).toHaveBeenCalledWith(
+        assignor.id,
         assignor.email,
       );
 

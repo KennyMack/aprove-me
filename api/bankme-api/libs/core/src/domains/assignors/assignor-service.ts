@@ -21,25 +21,23 @@ export class AssignorDomainService
     super();
   }
 
-  async validate(data: AssignorVO, isCreate: boolean): Promise<boolean> {
+  async validate(data: AssignorVO): Promise<boolean> {
     if (!BasicValidations.isValidCNPJOrCPF(data.document))
       super.addError(Fails.INVALID_DOCUMENT);
 
-    if (isCreate) {
-      const resultValidation = await Promise.all([
-        this.assignorRepo.documentExists(data.document),
-        this.assignorRepo.emailExists(data.email),
-      ]);
+    const resultValidation = await Promise.all([
+      this.assignorRepo.documentExists(data.id, data.document),
+      this.assignorRepo.emailExists(data.id, data.email),
+    ]);
 
-      if (resultValidation[0]) super.addError(Fails.DOCUMENT_ALREADY_EXISTS);
-      if (resultValidation[1]) super.addError(Fails.EMAIL_ALREADY_EXISTS);
-    }
+    if (resultValidation[0]) super.addError(Fails.DOCUMENT_ALREADY_EXISTS);
+    if (resultValidation[1]) super.addError(Fails.EMAIL_ALREADY_EXISTS);
 
     return !super.getErrors().length;
   }
 
   async create(data: AssignorVO): Promise<Assignor> {
-    const isValid = await this.validate(data, true);
+    const isValid = await this.validate(data);
     if (!isValid) return null;
 
     const assignorData = new Assignor();
@@ -53,7 +51,7 @@ export class AssignorDomainService
   }
 
   async changeById(id: string, data: AssignorVO): Promise<Assignor> {
-    const isValid = await this.validate(data, false);
+    const isValid = await this.validate(data);
     if (!isValid) return null;
 
     const assignorDb = await this.assignorRepo.getById(id);

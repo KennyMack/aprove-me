@@ -3,7 +3,7 @@ import { Assignor } from '../entities/assignor.entity';
 import { AssignorVO } from '../vos/assignor.vo';
 
 export interface IAssignorDomainService extends IErrorDomainService {
-  validate(data: AssignorVO, isCreate: boolean): Promise<boolean>;
+  validate(data: AssignorVO): Promise<boolean>;
   create(data: AssignorVO): Promise<Assignor>;
   changeById(id: string, data: AssignorVO): Promise<Assignor>;
   removeById(id: string): Promise<AssignorVO>;
