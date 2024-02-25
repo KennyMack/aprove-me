@@ -1,4 +1,4 @@
 export interface IReaderRepository<T> {
-  getAll<T>(): Promise<T[]>;
-  getById<T>(id: string): Promise<T>;
+  getAll(): Promise<T[]>;
+  getById(id: string): Promise<T>;
 }

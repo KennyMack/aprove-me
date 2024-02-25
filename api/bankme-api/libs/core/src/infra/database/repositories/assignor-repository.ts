@@ -48,11 +48,11 @@ export class AssignorRepository implements IAssignorRepository {
     });
   }
 
-  async getAll<Assignor>(): Promise<Assignor[]> {
+  async getAll(): Promise<Assignor[]> {
     return (await this.prisma.assignor.findMany()) as Assignor[];
   }
 
-  async getById<Assignor>(id: string): Promise<Assignor> {
+  async getById(id: string): Promise<Assignor> {
     return (await this.prisma.assignor.findUnique({
       where: { id },
     })) as Assignor;

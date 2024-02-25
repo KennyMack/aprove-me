@@ -7,11 +7,11 @@ import { Payable } from 'bme/core/domains/payables/entities/payable.entity';
 export class PayableRepository implements IPayableRepository {
   constructor(protected prisma: PrismaService) {}
 
-  async getAll<Payable>(): Promise<Payable[]> {
+  async getAll(): Promise<Payable[]> {
     return (await this.prisma.payable.findMany()) as Payable[];
   }
 
-  async getById<Payable>(id: string): Promise<Payable> {
+  async getById(id: string): Promise<Payable> {
     return (await this.prisma.payable.findUnique({
       where: { id: id },
     })) as Payable;

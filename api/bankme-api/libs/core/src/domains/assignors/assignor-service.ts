@@ -51,7 +51,7 @@ export class AssignorDomainService
   }
 
   async getAll(): Promise<AssignorVO[]> {
-    const result = await this.assignorRepo.getAll<Assignor>();
+    const result = await this.assignorRepo.getAll();
 
     return result.map(
       (x) => new AssignorVO(x.id, x.document, x.email, x.phone, x.name),
@@ -59,7 +59,7 @@ export class AssignorDomainService
   }
 
   async getById(id: string): Promise<AssignorVO> {
-    const result = await this.assignorRepo.getById<Assignor>(id);
+    const result = await this.assignorRepo.getById(id);
 
     if (result == null) return null;
 

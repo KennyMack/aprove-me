@@ -34,9 +34,7 @@ export class PayableDomainService
     }
 
     if (data.assignorId) {
-      const assignorExists = await this.assignorRepo.getById<Assignor>(
-        data.assignorId,
-      );
+      const assignorExists = await this.assignorRepo.getById(data.assignorId);
       if (!assignorExists) {
         super.addError(Fails.INVALID_ASSIGNOR_ID);
         return false;
@@ -47,7 +45,7 @@ export class PayableDomainService
   }
 
   async getById(id: string): Promise<PayableVO> {
-    const result = await this.payableRepo.getById<Payable>(id);
+    const result = await this.payableRepo.getById(id);
 
     if (result == null) return null;
 
@@ -61,7 +59,7 @@ export class PayableDomainService
   }
 
   async getAll(): Promise<PayableVO[]> {
-    const result = (await this.payableRepo.getAll<Payable>()) ?? [];
+    const result = (await this.payableRepo.getAll()) ?? [];
 
     return result.map(
       (x) => new PayableVO(x.id, x.value, x.emissionDate, x.assignorId, null),
