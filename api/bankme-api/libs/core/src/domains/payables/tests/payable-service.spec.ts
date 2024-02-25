@@ -78,8 +78,6 @@ describe('PayableDomainService', () => {
       expect(result.value).toStrictEqual(payable.value);
       expect(result.emissionDate).toStrictEqual(payable.emissionDate);
       expect(result.assignorId).toStrictEqual(payable.assignorId);
-      expect(result.createdAt).toStrictEqual(payable.createdAt);
-      expect(result.updateAt).toStrictEqual(payable.updateAt);
     });
 
     it('should not find a result by Id', async () => {

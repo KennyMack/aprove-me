@@ -55,7 +55,6 @@ describe('AssignorDomainservice', () => {
     it('should be a valid AssignorVO', async () => {
       const assignor = AssignorMocks.getAssignor();
       const vo = AssignorMocks.convertAssignorToVO(assignor);
-      console.log(assignor.document);
 
       assignorRepositoryMock.documentExists
         .calledWith(assignor.document)
