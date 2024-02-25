@@ -13,7 +13,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ListAuthDto } from './dto/list-auth.dto';
 
-@Controller('auth')
+@Controller('integrations/auth')
 @ApiTags('Authentication')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

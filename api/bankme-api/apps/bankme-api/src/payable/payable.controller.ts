@@ -15,7 +15,7 @@ import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import { createPayableSchema } from 'bme/core/domains/payables/entities/payable.schema';
 
-@Controller('payable')
+@Controller('integrations/payable')
 @ApiTags('Payable')
 export class PayableController {
   constructor(private readonly payableService: PayableService) {}

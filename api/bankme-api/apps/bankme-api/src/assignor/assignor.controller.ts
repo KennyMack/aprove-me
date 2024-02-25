@@ -13,7 +13,7 @@ import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ListAssignorDto } from './dto/list-assignor.dto';
 
-@Controller('assignor')
+@Controller('integrations/assignor')
 @ApiTags('Assignor')
 export class AssignorController {
   constructor(private readonly assignorService: AssignorService) {}
