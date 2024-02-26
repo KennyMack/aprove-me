@@ -16,7 +16,7 @@ export const createAssignorSchema = z.object({
 
 export const changeAssignorSchema = z
   .object({
-    id: z.string().uuid().optional(),
+    id: z.string().uuid(),
     document: z
       .string()
       .max(30)

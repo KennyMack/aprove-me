@@ -8,7 +8,9 @@ export class PayableRepository implements IPayableRepository {
   constructor(protected prisma: PrismaService) {}
 
   async getAll(): Promise<Payable[]> {
-    return (await this.prisma.payable.findMany()) as Payable[];
+    return (await this.prisma.payable.findMany({
+      orderBy: [{ createdAt: 'desc' }],
+    })) as Payable[];
   }
 
   async getById(id: string): Promise<Payable> {

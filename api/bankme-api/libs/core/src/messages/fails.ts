@@ -2,6 +2,7 @@ export class Fails {
   static INVALID_BODY = 'Requisição inválida.';
   static INVALID_ASSIGNOR = 'Cedente informado inválido.';
   static INVALID_ASSIGNOR_ID = 'Cód. Cedente informado inválido.';
+  static INVALID_PAYABLE_ID = 'Cód. pagamento informado inválido.';
   static DOCUMENT_ALREADY_EXISTS = 'CPF ou CNPJ do cedente já existe.';
   static EMAIL_ALREADY_EXISTS = 'E-mail do cedente já existe.';
   static FIELD_BY_NAME_REQUIRED = 'O campo #CAMPO# é obrigatório.';

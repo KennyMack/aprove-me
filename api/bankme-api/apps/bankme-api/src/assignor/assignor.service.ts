@@ -34,9 +34,12 @@ export class AssignorService {
           this.assignorService.getErrors(),
         );
 
-      return HttpResult.Ok(createResult);
+      return HttpResult.Created(createResult);
     } catch (e) {
-      return HttpResult.UnprocessableEntity(createAssignorDto, [e.message]);
+      return HttpResult.UnprocessableEntity(createAssignorDto, [
+        e.message,
+        ...this.assignorService.getErrors(),
+      ]);
     }
   }
 
@@ -66,7 +69,10 @@ export class AssignorService {
 
       return HttpResult.Ok(createResult);
     } catch (e) {
-      return HttpResult.UnprocessableEntity(updateAssignorDto, [e.message]);
+      return HttpResult.UnprocessableEntity(updateAssignorDto, [
+        e.message,
+        ...this.assignorService.getErrors(),
+      ]);
     }
   }
 
@@ -83,7 +89,10 @@ export class AssignorService {
         results,
       });
     } catch (e) {
-      return HttpResult.BadRequest({}, [e.message]);
+      return HttpResult.BadRequest({}, [
+        e.message,
+        ...this.assignorService.getErrors(),
+      ]);
     }
   }
 
@@ -98,7 +107,10 @@ export class AssignorService {
 
       return HttpResult.Ok(result);
     } catch (e) {
-      return HttpResult.BadRequest({ id }, [e.message]);
+      return HttpResult.BadRequest({ id }, [
+        e.message,
+        ...this.assignorService.getErrors(),
+      ]);
     }
   }
 
@@ -113,7 +125,10 @@ export class AssignorService {
 
       return HttpResult.Ok(result);
     } catch (e) {
-      return HttpResult.BadRequest({ id }, [e.message]);
+      return HttpResult.BadRequest({ id }, [
+        e.message,
+        ...this.assignorService.getErrors(),
+      ]);
     }
   }
 }

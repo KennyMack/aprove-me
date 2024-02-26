@@ -8,6 +8,7 @@ import { HttpVO } from 'bme/core/http/http.vo';
 import { AssignorVO } from 'bme/core/domains/assignors/vos/assignor.vo';
 import { AssignorDomainService } from 'bme/core/domains/assignors/assignor-service';
 import { IAssignorDomainService } from 'bme/core/domains/assignors/interfaces/assignor-service.interface';
+import { UpdatePayableDto } from './dto/update-payable.dto';
 
 @Injectable()
 export class PayableService {
@@ -17,6 +18,7 @@ export class PayableService {
     @Inject(AssignorDomainService)
     protected assignorService: IAssignorDomainService,
   ) {}
+
   async create(createPayableDto: CreatePayableDto): Promise<HttpVO> {
     let assignorVO: AssignorVO;
     if (createPayableDto.assignor) {
@@ -58,9 +60,65 @@ export class PayableService {
           this.payableService.getErrors(),
         );
 
+      return HttpResult.Created(createResult);
+    } catch (e) {
+      return HttpResult.UnprocessableEntity(createPayableDto, [
+        e.message,
+        ...this.payableService.getErrors(),
+        ...this.assignorService.getErrors(),
+      ]);
+    }
+  }
+
+  async update(id: string, updateAssignorDto: UpdatePayableDto) {
+    let assignorVO: AssignorVO;
+    if (updateAssignorDto.assignor) {
+      assignorVO = new AssignorVO(
+        '',
+        updateAssignorDto.assignor.document,
+        updateAssignorDto.assignor.email,
+        updateAssignorDto.assignor.phone,
+        updateAssignorDto.assignor.name,
+      );
+
+      this.assignorService.resetDomain();
+
+      const validation = await this.assignorService.validate(assignorVO);
+
+      if (!validation)
+        return HttpResult.BadRequest(
+          updateAssignorDto,
+          this.assignorService.getErrors(),
+        );
+    }
+    const payableVO = new PayableVO(
+      id,
+      updateAssignorDto.value,
+      updateAssignorDto.emissionDate,
+      updateAssignorDto.assignorId,
+      assignorVO,
+    );
+
+    try {
+      this.payableService.resetDomain();
+
+      const createResult = await this.payableService.changeById(id, payableVO);
+
+      const errors = this.payableService.getErrors();
+
+      if (errors.length)
+        return HttpResult.BadRequest(
+          updateAssignorDto,
+          this.payableService.getErrors(),
+        );
+
       return HttpResult.Ok(createResult);
     } catch (e) {
-      return HttpResult.UnprocessableEntity(createPayableDto, [e.message]);
+      return HttpResult.UnprocessableEntity(updateAssignorDto, [
+        e.message,
+        ...this.payableService.getErrors(),
+        ...this.assignorService.getErrors(),
+      ]);
     }
   }
 
@@ -77,7 +135,10 @@ export class PayableService {
         results,
       });
     } catch (e) {
-      return HttpResult.BadRequest({}, [e.message]);
+      return HttpResult.BadRequest({}, [
+        e.message,
+        ...this.payableService.getErrors(),
+      ]);
     }
   }
 
@@ -92,7 +153,10 @@ export class PayableService {
 
       return HttpResult.Ok(result);
     } catch (e) {
-      return HttpResult.BadRequest({ id }, [e.message]);
+      return HttpResult.BadRequest({ id }, [
+        e.message,
+        ...this.payableService.getErrors(),
+      ]);
     }
   }
 
@@ -107,7 +171,10 @@ export class PayableService {
 
       return HttpResult.Ok(result);
     } catch (e) {
-      return HttpResult.BadRequest({ id }, [e.message]);
+      return HttpResult.BadRequest({ id }, [
+        e.message,
+        ...this.payableService.getErrors(),
+      ]);
     }
   }
 }

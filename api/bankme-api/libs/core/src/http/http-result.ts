@@ -7,6 +7,10 @@ export class HttpResult {
     return new HttpVO(true, HttpStatus.OK, body, null);
   }
 
+  public static Created(body: any): HttpVO {
+    return new HttpVO(true, HttpStatus.CREATED, body, null);
+  }
+
   public static BadRequest(body: any, errors: string[]): HttpVO {
     return new HttpVO(false, HttpStatus.BAD_REQUEST, body, errors);
   }

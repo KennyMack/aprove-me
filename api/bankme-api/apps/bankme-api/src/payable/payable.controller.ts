@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseInterceptors,
+  Patch,
 } from '@nestjs/common';
 import { PayableService } from './payable.service';
 import { CreatePayableDto } from './dto/create-payable.dto';
@@ -13,7 +14,11 @@ import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ListPayableDto } from './dto/list-payable.dto';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
-import { createPayableSchema } from 'bme/core/domains/payables/entities/payable.schema';
+import {
+  changePayableSchema,
+  createPayableSchema,
+} from 'bme/core/domains/payables/entities/payable.schema';
+import { UpdatePayableDto } from './dto/update-payable.dto';
 
 @Controller('integrations/payable')
 @ApiTags('Payable')
@@ -22,7 +27,7 @@ export class PayableController {
 
   @Post()
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Create a payable',
     type: CreatePayableDto,
   })
@@ -31,8 +36,21 @@ export class PayableController {
     @Body(new ZodValidationPipe(createPayableSchema))
     createPayableDto: CreatePayableDto,
   ) {
-    console.log('create');
     return this.payableService.create(createPayableDto);
+  }
+
+  @Patch(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Change a payable by id',
+    type: UpdatePayableDto,
+  })
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(changePayableSchema))
+    updateAssignorDto: UpdatePayableDto,
+  ) {
+    return this.payableService.update(id, updateAssignorDto);
   }
 
   @Get()

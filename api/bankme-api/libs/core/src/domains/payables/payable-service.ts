@@ -103,6 +103,40 @@ export class PayableDomainService
     return await this.payableRepo.create(createData);
   }
 
+  async changeById(id: string, data: PayableVO): Promise<Payable> {
+    const isValid = await this.validate(data);
+    if (!isValid) return null;
+
+    const payableDb = await this.payableRepo.getById(id);
+
+    if (!payableDb) super.addError(Fails.INVALID_PAYABLE_ID);
+
+    if (super.getErrors().length) return null;
+
+    const payableData = new Payable();
+    payableData.id = id;
+    payableData.assignorId = data.assignorId;
+    payableData.value = data.value;
+    payableData.emissionDate = data.emissionDate;
+    payableData.createdAt = payableDb.createdAt;
+    payableData.updateAt = new Date();
+
+    if (data.assignor) {
+      const assignorData = new Assignor();
+      assignorData.id = data.assignor.id || Sequence.getNext();
+      assignorData.document = data.assignor.document;
+      assignorData.email = data.assignor.email;
+      assignorData.phone = data.assignor.phone;
+      assignorData.name = data.assignor.name;
+
+      const assignorDb = await this.assignorRepo.create(assignorData);
+
+      payableData.assignorId = assignorDb.id;
+    }
+
+    return await this.payableRepo.changeById(id, payableData);
+  }
+
   async removeById(id: string): Promise<PayableVO> {
     const removed = await this.payableRepo.removeById(id);
     if (!removed) return null;
