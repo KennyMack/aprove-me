@@ -6,7 +6,6 @@ export const createPayableSchema = z.object({
   value: z.coerce.number(),
   emissionDate: z
     .string()
-    .datetime()
     .refine((x) => BasicValidations.isValidDate(x)),
   assignorId: z.string().uuid().optional(),
   assignor: z

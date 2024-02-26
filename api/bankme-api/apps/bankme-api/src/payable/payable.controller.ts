@@ -31,6 +31,7 @@ export class PayableController {
     @Body(new ZodValidationPipe(createPayableSchema))
     createPayableDto: CreatePayableDto,
   ) {
+    console.log('create');
     return this.payableService.create(createPayableDto);
   }
 

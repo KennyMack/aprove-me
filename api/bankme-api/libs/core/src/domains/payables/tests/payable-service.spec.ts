@@ -51,6 +51,9 @@ describe('PayableDomainService', () => {
       const vo = PayableMocks.convertPayableToVO(payable, null);
 
       const result = await service.validate(vo);
+
+      console.log(service.getErrors());
+
       expect(assignorRepositoryMock.getById).toHaveBeenCalledWith(
         payable.assignorId,
       );

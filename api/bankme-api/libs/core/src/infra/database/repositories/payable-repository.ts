@@ -20,7 +20,12 @@ export class PayableRepository implements IPayableRepository {
   async create(data: Payable): Promise<Payable> {
     return await this.prisma.payable.create({
       data: {
-        ...data,
+        value: data.value,
+        emissionDate: new Date(data.emissionDate).toISOString(),
+        assignorId: data.assignorId,
+        id: data.id,
+        createdAt: data.createdAt,
+        updateAt: data.updateAt,
       },
     });
   }
@@ -29,7 +34,12 @@ export class PayableRepository implements IPayableRepository {
     return await this.prisma.payable.update({
       where: { id: id },
       data: {
-        ...data,
+        value: data.value,
+        emissionDate: new Date(data.emissionDate).toISOString(),
+        assignorId: data.assignorId,
+        id: data.id,
+        createdAt: data.createdAt,
+        updateAt: data.updateAt,
       },
     });
   }

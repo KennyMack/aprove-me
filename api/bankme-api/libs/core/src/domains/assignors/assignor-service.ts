@@ -41,7 +41,7 @@ export class AssignorDomainService
     if (!isValid) return null;
 
     const assignorData = new Assignor();
-    assignorData.id = data.id ?? Sequence.getNext();
+    assignorData.id = data.id || Sequence.getNext();
     assignorData.document = data.document;
     assignorData.email = data.email;
     assignorData.phone = data.phone;

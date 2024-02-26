@@ -1,11 +1,23 @@
 import { cnpj, cpf } from 'cpf-cnpj-validator';
 import { z } from 'zod';
-import { DateTime } from 'luxon';
+import { format, isValid, parse } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export class BasicValidations {
-  public static isValidDate(date: string): boolean {
-    const now = DateTime.fromISO(date);
-    return now.isValid ?? false;
+  public static isValidDate(date: string|Date): boolean {
+    let dtValue: string = date.toString();
+    if (!(typeof date === 'string')) dtValue = format(date, 'yyyy-MM-dd HH:mm:ss');
+    
+    const parsedDate = parse(
+      dtValue,
+      'yyyy-MM-dd HH:mm:ss',
+      new Date(2010, 0, 1),
+      {
+        locale: ptBR,
+      },
+    );
+
+    return isValid(parsedDate) ?? false;
   }
 
   public static isValidEmail(email: string): boolean {

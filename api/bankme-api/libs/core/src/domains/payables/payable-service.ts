@@ -61,7 +61,7 @@ export class PayableDomainService
   }
 
   async getAll(): Promise<PayableVO[]> {
-    const result = (await this.payableRepo.getAll()) ?? [];
+    const result = (await this.payableRepo.getAll()) || [];
 
     return result.map(
       (x) =>
@@ -82,14 +82,14 @@ export class PayableDomainService
     if (!isValid) return null;
 
     const createData = new Payable();
-    createData.id = data.id ?? Sequence.getNext();
+    createData.id = data.id || Sequence.getNext();
     createData.value = data.value;
     createData.emissionDate = data.emissionDate;
     createData.assignorId = data.assignorId;
 
     if (data.assignor) {
       const assignorData = new Assignor();
-      assignorData.id = data.assignor.id ?? Sequence.getNext();
+      assignorData.id = data.assignor.id || Sequence.getNext();
       assignorData.document = data.assignor.document;
       assignorData.email = data.assignor.email;
       assignorData.phone = data.assignor.phone;
