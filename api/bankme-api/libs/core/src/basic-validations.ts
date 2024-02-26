@@ -4,10 +4,11 @@ import { format, isValid, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export class BasicValidations {
-  public static isValidDate(date: string|Date): boolean {
+  public static isValidDate(date: string | Date): boolean {
     let dtValue: string = date.toString();
-    if (!(typeof date === 'string')) dtValue = format(date, 'yyyy-MM-dd HH:mm:ss');
-    
+    if (!(typeof date === 'string'))
+      dtValue = format(date, 'yyyy-MM-dd HH:mm:ss');
+
     const parsedDate = parse(
       dtValue,
       'yyyy-MM-dd HH:mm:ss',

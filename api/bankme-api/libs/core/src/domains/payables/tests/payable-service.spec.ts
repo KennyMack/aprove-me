@@ -52,8 +52,6 @@ describe('PayableDomainService', () => {
 
       const result = await service.validate(vo);
 
-      console.log(service.getErrors());
-
       expect(assignorRepositoryMock.getById).toHaveBeenCalledWith(
         payable.assignorId,
       );
@@ -211,6 +209,126 @@ describe('PayableDomainService', () => {
 
       expect(assignorRepositoryMock.getById).toHaveBeenCalledTimes(0);
       expect(payableRepositoryMock.create).toHaveBeenCalledTimes(1);
+      expect(assignorRepositoryMock.create).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('PayableDomainService.change()', () => {
+    it('should fail to change a payment', async () => {
+      let payable = PayableMocks.getPayable();
+      let assignor = AssignorMocks.getAssignor();
+      payable.assignorId = null;
+
+      payableRepositoryMock.changeById.mockReturnValue(
+        Promise.resolve(payable),
+      );
+
+      assignorRepositoryMock.getById
+        .calledWith(payable.assignorId)
+        .mockReturnValue(Promise.resolve(assignor));
+
+      let payableVO = PayableMocks.convertPayableToVO(payable, null);
+      let result = await service.changeById(payableVO.id, payableVO);
+
+      expect(result).toStrictEqual(null);
+      expect(service.getErrors().length).toBeGreaterThanOrEqual(1);
+      expect(assignorRepositoryMock.getById).toHaveBeenCalledTimes(0);
+      expect(payableRepositoryMock.changeById).toHaveBeenCalledTimes(0);
+
+      mockReset(payableRepositoryMock);
+      mockReset(assignorRepositoryMock);
+
+      payable = PayableMocks.getPayable();
+      assignor = AssignorMocks.getAssignor();
+
+      payableRepositoryMock.changeById.mockReturnValue(
+        Promise.resolve(payable),
+      );
+
+      assignorRepositoryMock.getById
+        .calledWith(payable.assignorId)
+        .mockReturnValue(Promise.resolve(null));
+
+      payableVO = PayableMocks.convertPayableToVO(payable, null);
+      result = await service.changeById(payableVO.id, payableVO);
+
+      expect(result).toStrictEqual(null);
+      expect(service.getErrors().length).toBeGreaterThanOrEqual(1);
+
+      expect(assignorRepositoryMock.getById).toHaveBeenCalledWith(
+        payable.assignorId,
+      );
+      expect(assignorRepositoryMock.getById).toHaveBeenCalledTimes(1);
+      expect(payableRepositoryMock.changeById).toHaveBeenCalledTimes(0);
+    });
+
+    it('should change a payment with assignor Id', async () => {
+      const payable = PayableMocks.getPayable();
+      const assignor = AssignorMocks.getAssignor();
+      payable.assignorId = assignor.id;
+
+      payableRepositoryMock.changeById.mockReturnValue(
+        Promise.resolve(payable),
+      );
+
+      payableRepositoryMock.getById
+        .calledWith(payable.id)
+        .mockReturnValue(Promise.resolve(payable));
+
+      assignorRepositoryMock.getById
+        .calledWith(payable.assignorId)
+        .mockReturnValue(Promise.resolve(assignor));
+
+      const payableVO = PayableMocks.convertPayableToVO(payable, null);
+      const result = await service.changeById(payableVO.id, payableVO);
+
+      expect(result.id).toStrictEqual(payableVO.id);
+      expect(result.value).toBeGreaterThan(0);
+      expect(result.value).toStrictEqual(payable.value);
+      expect(result.emissionDate).toStrictEqual(payable.emissionDate);
+      expect(result.assignorId).toStrictEqual(payable.assignorId);
+
+      expect(assignorRepositoryMock.getById).toHaveBeenCalledWith(
+        payable.assignorId,
+      );
+      expect(payableRepositoryMock.changeById).toHaveBeenCalledWith(
+        payable.id,
+        payable,
+      );
+      expect(assignorRepositoryMock.getById).toHaveBeenCalledTimes(1);
+      expect(payableRepositoryMock.changeById).toHaveBeenCalledTimes(1);
+    });
+
+    it('should change a new payment and create a new assignor', async () => {
+      const payable = PayableMocks.getPayable();
+      const assignor = AssignorMocks.getAssignor();
+
+      payableRepositoryMock.getById
+        .calledWith(payable.id)
+        .mockReturnValue(Promise.resolve(payable));
+
+      assignorRepositoryMock.getById
+        .calledWith(payable.assignorId)
+        .mockReturnValue(Promise.resolve(assignor));
+
+      payable.assignorId = null;
+
+      payableRepositoryMock.changeById.mockReturnValue(
+        Promise.resolve(payable),
+      );
+      assignorRepositoryMock.create.mockReturnValue(Promise.resolve(assignor));
+
+      const payableVO = PayableMocks.convertPayableToVO(payable, assignor);
+      const result = await service.changeById(payableVO.id, payableVO);
+
+      expect(result.id).toStrictEqual(payableVO.id);
+      expect(result.assignorId).toBeDefined();
+      expect(result.value).toBeGreaterThan(0);
+      expect(result.value).toStrictEqual(payable.value);
+      expect(result.emissionDate).toStrictEqual(payable.emissionDate);
+
+      expect(assignorRepositoryMock.getById).toHaveBeenCalledTimes(0);
+      expect(payableRepositoryMock.changeById).toHaveBeenCalledTimes(1);
       expect(assignorRepositoryMock.create).toHaveBeenCalledTimes(1);
     });
   });
