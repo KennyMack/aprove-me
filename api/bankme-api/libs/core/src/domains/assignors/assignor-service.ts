@@ -22,12 +22,23 @@ export class AssignorDomainService
   }
 
   async validate(data: AssignorVO): Promise<boolean> {
-    if (!BasicValidations.isValidCNPJOrCPF(data.document))
+    const { id, name, phone, email, document } = data;
+
+    if (!name || !phone || !email || !document) {
+      super.addError(Fails.INVALID_ASSIGNOR);
+      return false;
+    }
+
+    const validationError = data.isValid();
+
+    if (validationError) super.addError(validationError);
+
+    if (!BasicValidations.isValidCNPJOrCPF(document))
       super.addError(Fails.INVALID_DOCUMENT);
 
     const resultValidation = await Promise.all([
-      this.assignorRepo.documentExists(data.id, data.document),
-      this.assignorRepo.emailExists(data.id, data.email),
+      this.assignorRepo.documentExists(id, document),
+      this.assignorRepo.emailExists(id, data.email),
     ]);
 
     if (resultValidation[0]) super.addError(Fails.DOCUMENT_ALREADY_EXISTS);
