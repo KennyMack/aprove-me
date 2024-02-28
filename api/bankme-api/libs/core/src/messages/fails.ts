@@ -2,6 +2,7 @@ export class Fails {
   static INVALID_BODY = 'Requisição inválida.';
   static INVALID_ASSIGNOR = 'Cedente informado inválido.';
   static INVALID_ASSIGNOR_ID = 'Cód. Cedente informado inválido.';
+  static INVALID_USER_ID = 'Cód. usuário informado inválido.';
   static INVALID_PAYABLE_ID = 'Cód. pagamento informado inválido.';
   static DOCUMENT_ALREADY_EXISTS = 'CPF ou CNPJ do cedente já existe.';
   static EMAIL_ALREADY_EXISTS = 'E-mail do cedente já existe.';
@@ -14,4 +15,5 @@ export class Fails {
     'Valor do recebível deve ser maior que zero.';
   static FIELD_BY_NAME_INVALID =
     'Valor informado no campo #CAMPO# não é válido.';
+  static LOGIN_ALREADY_EXISTS = 'Login informado já existe.';
 }

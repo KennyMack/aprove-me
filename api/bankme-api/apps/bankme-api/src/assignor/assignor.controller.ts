@@ -12,7 +12,6 @@ import { AssignorService } from './assignor.service';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ListAssignorDto } from './dto/list-assignor.dto';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import {
   changeAssignorSchema,
@@ -27,7 +26,7 @@ export class AssignorController {
 
   @Post()
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Create an assignor',
     type: CreateAssignorDto,
   })
@@ -45,6 +44,7 @@ export class AssignorController {
     description: 'Change an assignor by id',
     type: UpdateAssignorDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   update(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(changeAssignorSchema))
@@ -57,7 +57,8 @@ export class AssignorController {
   @ApiResponse({
     status: 200,
     description: 'list all assignors',
-    type: ListAssignorDto,
+    isArray: true,
+    type: CreateAssignorDto,
   })
   findAll() {
     return this.assignorService.findAll();

@@ -1,19 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDomainService } from 'bme/core/domains/users/user-service';
 import { IUserDomainService } from 'bme/core/domains/users/interfaces/user-service.interface';
-import { HttpResult } from 'bme/core/http/http-result';
 import { UserVO } from 'bme/core/domains/users/vos/user.vo';
+import { HttpResult } from 'bme/core/http/http-result';
 
 @Injectable()
-export class AuthService {
+export class UserService {
   constructor(
     @Inject(UserDomainService)
     protected userService: IUserDomainService,
   ) {}
 
-  async create(createAuthDto: CreateAuthDto) {
+  async create(createAuthDto: CreateUserDto) {
     const userVO = new UserVO('', createAuthDto.login, createAuthDto.password);
 
     try {
@@ -37,7 +37,7 @@ export class AuthService {
     }
   }
 
-  async update(id: string, updateAuthDto: UpdateAuthDto) {
+  async update(id: string, updateAuthDto: UpdateUserDto) {
     const userVO = new UserVO(id, updateAuthDto.login, updateAuthDto.password);
 
     try {

@@ -11,7 +11,6 @@ import {
 import { PayableService } from './payable.service';
 import { CreatePayableDto } from './dto/create-payable.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { ListPayableDto } from './dto/list-payable.dto';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import {
@@ -57,7 +56,7 @@ export class PayableController {
   @ApiResponse({
     status: 200,
     description: 'Get list all payables',
-    type: ListPayableDto,
+    type: CreatePayableDto,
     isArray: true,
   })
   findAll() {

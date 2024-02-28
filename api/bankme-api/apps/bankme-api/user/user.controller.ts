@@ -8,26 +8,26 @@ import {
   Delete,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
+import { HttpStatusInterceptor } from '../src/interceptors/http-status.interceptor';
 
-@Controller('integrations/auth')
+@Controller('integrations/user')
 @ApiTags('Authentication')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @ApiResponse({
     status: 201,
     description: 'Create an user',
-    type: CreateAuthDto,
+    type: CreateUserDto,
   })
   @UseInterceptors(HttpStatusInterceptor)
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Get()
@@ -35,40 +35,40 @@ export class AuthController {
     status: 200,
     description: 'Get user list',
     isArray: true,
-    type: CreateAuthDto,
+    type: CreateUserDto,
   })
   findAll() {
-    return this.authService.findAll();
+    return this.userService.findAll();
   }
 
   @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'Get user By Id',
-    type: CreateAuthDto,
+    type: CreateUserDto,
   })
   findOne(@Param('id') id: string) {
-    return this.authService.findOne(id);
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'Change user By Id',
-    type: UpdateAuthDto,
+    type: UpdateUserDto,
   })
   @UseInterceptors(HttpStatusInterceptor)
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(id, updateAuthDto);
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @ApiResponse({
     status: 200,
     description: 'Remove user By Id',
-    type: CreateAuthDto,
+    type: CreateUserDto,
   })
   remove(@Param('id') id: string) {
-    return this.authService.remove(id);
+    return this.userService.remove(id);
   }
 }
