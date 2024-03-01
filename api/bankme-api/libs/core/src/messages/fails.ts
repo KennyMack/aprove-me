@@ -16,4 +16,6 @@ export class Fails {
   static FIELD_BY_NAME_INVALID =
     'Valor informado no campo #CAMPO# não é válido.';
   static LOGIN_ALREADY_EXISTS = 'Login informado já existe.';
+  static INVALID_LOGIN = 'Login informado inválido.';
+  static INVALID_PASSWORD = 'Senha informada inválida.';
 }
