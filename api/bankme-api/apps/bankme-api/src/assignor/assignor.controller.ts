@@ -60,6 +60,7 @@ export class AssignorController {
     isArray: true,
     type: CreateAssignorDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   findAll() {
     return this.assignorService.findAll();
   }
@@ -70,6 +71,7 @@ export class AssignorController {
     description: 'Get an assignor by id',
     type: CreateAssignorDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   findOne(@Param('id') id: string) {
     return this.assignorService.findOne(id);
   }
@@ -80,6 +82,7 @@ export class AssignorController {
     description: 'Remove an assignor by id',
     type: CreateAssignorDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   remove(@Param('id') id: string) {
     return this.assignorService.remove(id);
   }

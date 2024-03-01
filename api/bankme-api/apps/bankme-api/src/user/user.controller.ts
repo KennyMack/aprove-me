@@ -13,6 +13,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
+import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
+import { createUserSchema } from 'bme/core/domains/users/entities/users.schema';
 
 @Controller('integrations/user')
 @ApiTags('User')
@@ -26,7 +28,9 @@ export class UserController {
     type: CreateUserDto,
   })
   @UseInterceptors(HttpStatusInterceptor)
-  create(@Body() createUserDto: CreateUserDto) {
+  create(
+    @Body(new ZodValidationPipe(createUserSchema)) createUserDto: CreateUserDto,
+  ) {
     return this.userService.create(createUserDto);
   }
 
@@ -37,6 +41,7 @@ export class UserController {
     isArray: true,
     type: CreateUserDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   findAll() {
     return this.userService.findAll();
   }
@@ -47,6 +52,7 @@ export class UserController {
     description: 'Get user By Id',
     type: CreateUserDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
@@ -58,7 +64,10 @@ export class UserController {
     type: UpdateUserDto,
   })
   @UseInterceptors(HttpStatusInterceptor)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(createUserSchema)) updateUserDto: UpdateUserDto,
+  ) {
     return this.userService.update(id, updateUserDto);
   }
 
@@ -68,6 +77,7 @@ export class UserController {
     description: 'Remove user By Id',
     type: CreateUserDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
