@@ -8,6 +8,7 @@ import { UserVO } from './vos/user.vo';
 import { Fails } from 'bme/core/messages/fails';
 import { Sequence } from 'bme/core/sequence';
 import { AuthVO } from './vos/auth.vo';
+import { MordorCripto } from 'bme/core/mordor-cripto';
 
 @Injectable()
 export class UserDomainService
@@ -35,7 +36,10 @@ export class UserDomainService
 
     const loginExists = await this.userRepo.existsLogin(data.id, data.login);
 
-    if (loginExists) super.addError(Fails.LOGIN_ALREADY_EXISTS);
+    if (loginExists) {
+      super.addError(Fails.LOGIN_ALREADY_EXISTS);
+      return false;
+    }
 
     return true;
   }
@@ -47,7 +51,7 @@ export class UserDomainService
     const assignorData = new User();
     assignorData.id = data.id || Sequence.getNext();
     assignorData.login = data.login;
-    assignorData.password = data.password;
+    assignorData.password = MordorCripto.Encrypt(data.password);
 
     return await this.userRepo.create(assignorData);
   }
@@ -65,7 +69,7 @@ export class UserDomainService
     const userData = new User();
     userData.id = id;
     userData.login = data.login;
-    userData.password = data.password;
+    userData.password = MordorCripto.Encrypt(data.password);
     userData.createdAt = userDb.createdAt;
     userData.updateAt = new Date();
 
