@@ -34,9 +34,7 @@ export class PayableDomainService
     }
 
     if (data.assignorId) {
-      const assignorExists = await this.assignorRepo.getById<Assignor>(
-        data.assignorId,
-      );
+      const assignorExists = await this.assignorRepo.getById(data.assignorId);
       if (!assignorExists) {
         super.addError(Fails.INVALID_ASSIGNOR_ID);
         return false;
@@ -47,7 +45,7 @@ export class PayableDomainService
   }
 
   async getById(id: string): Promise<PayableVO> {
-    const result = await this.payableRepo.getById<Payable>(id);
+    const result = await this.payableRepo.getById(id);
 
     if (result == null) return null;
 
@@ -57,14 +55,25 @@ export class PayableDomainService
       result.emissionDate,
       result.assignorId,
       null,
+      result.createdAt,
+      result.updateAt,
     );
   }
 
   async getAll(): Promise<PayableVO[]> {
-    const result = (await this.payableRepo.getAll<Payable>()) ?? [];
+    const result = (await this.payableRepo.getAll()) || [];
 
     return result.map(
-      (x) => new PayableVO(x.id, x.value, x.emissionDate, x.assignorId, null),
+      (x) =>
+        new PayableVO(
+          x.id,
+          x.value,
+          x.emissionDate,
+          x.assignorId,
+          null,
+          x.createdAt,
+          x.updateAt,
+        ),
     );
   }
 
@@ -73,14 +82,14 @@ export class PayableDomainService
     if (!isValid) return null;
 
     const createData = new Payable();
-    createData.id = data.id ?? Sequence.getNext();
+    createData.id = data.id || Sequence.getNext();
     createData.value = data.value;
     createData.emissionDate = data.emissionDate;
     createData.assignorId = data.assignorId;
 
     if (data.assignor) {
       const assignorData = new Assignor();
-      assignorData.id = data.assignor.id ?? Sequence.getNext();
+      assignorData.id = data.assignor.id || Sequence.getNext();
       assignorData.document = data.assignor.document;
       assignorData.email = data.assignor.email;
       assignorData.phone = data.assignor.phone;
@@ -94,6 +103,40 @@ export class PayableDomainService
     return await this.payableRepo.create(createData);
   }
 
+  async changeById(id: string, data: PayableVO): Promise<Payable> {
+    const isValid = await this.validate(data);
+    if (!isValid) return null;
+
+    const payableDb = await this.payableRepo.getById(id);
+
+    if (!payableDb) super.addError(Fails.INVALID_PAYABLE_ID);
+
+    if (super.getErrors().length) return null;
+
+    const payableData = new Payable();
+    payableData.id = id;
+    payableData.assignorId = data.assignorId;
+    payableData.value = data.value;
+    payableData.emissionDate = data.emissionDate;
+    payableData.createdAt = payableDb.createdAt;
+    payableData.updateAt = new Date();
+
+    if (data.assignor) {
+      const assignorData = new Assignor();
+      assignorData.id = data.assignor.id || Sequence.getNext();
+      assignorData.document = data.assignor.document;
+      assignorData.email = data.assignor.email;
+      assignorData.phone = data.assignor.phone;
+      assignorData.name = data.assignor.name;
+
+      const assignorDb = await this.assignorRepo.create(assignorData);
+
+      payableData.assignorId = assignorDb.id;
+    }
+
+    return await this.payableRepo.changeById(id, payableData);
+  }
+
   async removeById(id: string): Promise<PayableVO> {
     const removed = await this.payableRepo.removeById(id);
     if (!removed) return null;
@@ -104,6 +147,8 @@ export class PayableDomainService
       removed.emissionDate,
       removed.assignorId,
       null,
+      removed.createdAt,
+      removed.updateAt,
     );
   }
 }

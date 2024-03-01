@@ -9,6 +9,8 @@ export class AssignorVO extends BaseVO {
     public readonly email: string,
     public readonly phone: string,
     public readonly name: string,
+    public readonly createdAt: Date = new Date(),
+    public readonly updateAt: Date = new Date(),
   ) {
     super(id);
   }

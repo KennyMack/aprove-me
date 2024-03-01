@@ -7,11 +7,13 @@ import { Payable } from 'bme/core/domains/payables/entities/payable.entity';
 export class PayableRepository implements IPayableRepository {
   constructor(protected prisma: PrismaService) {}
 
-  async getAll<Payable>(): Promise<Payable[]> {
-    return (await this.prisma.payable.findMany()) as Payable[];
+  async getAll(): Promise<Payable[]> {
+    return (await this.prisma.payable.findMany({
+      orderBy: [{ createdAt: 'desc' }],
+    })) as Payable[];
   }
 
-  async getById<Payable>(id: string): Promise<Payable> {
+  async getById(id: string): Promise<Payable> {
     return (await this.prisma.payable.findUnique({
       where: { id: id },
     })) as Payable;
@@ -20,7 +22,12 @@ export class PayableRepository implements IPayableRepository {
   async create(data: Payable): Promise<Payable> {
     return await this.prisma.payable.create({
       data: {
-        ...data,
+        value: data.value,
+        emissionDate: new Date(data.emissionDate).toISOString(),
+        assignorId: data.assignorId,
+        id: data.id,
+        createdAt: data.createdAt,
+        updateAt: data.updateAt,
       },
     });
   }
@@ -29,7 +36,12 @@ export class PayableRepository implements IPayableRepository {
     return await this.prisma.payable.update({
       where: { id: id },
       data: {
-        ...data,
+        value: data.value,
+        emissionDate: new Date(data.emissionDate).toISOString(),
+        assignorId: data.assignorId,
+        id: data.id,
+        createdAt: data.createdAt,
+        updateAt: data.updateAt,
       },
     });
   }

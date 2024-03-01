@@ -11,6 +11,7 @@ export class PrismaService
   implements OnModuleInit, OnApplicationShutdown
 {
   async onApplicationShutdown(signal?: string) {
+    console.log(signal);
     await this.$disconnect();
   }
 

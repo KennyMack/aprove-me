@@ -10,6 +10,8 @@ export class PayableVO extends BaseVO {
     public readonly emissionDate: Date,
     public readonly assignorId: string,
     public readonly assignor: AssignorVO,
+    public readonly createdAt: Date = new Date(),
+    public readonly updateAt: Date = new Date(),
   ) {
     super(id);
   }
@@ -21,7 +23,7 @@ export class PayableVO extends BaseVO {
     )
       return Fails.INVALID_ASSIGNOR;
 
-    if (!BasicValidations.isValidDate(this.emissionDate.toISOString()))
+    if (!BasicValidations.isValidDate(this.emissionDate))
       return Fails.INVALID_EMISSIONDATE;
 
     if (this.value <= 0) return Fails.PAYMENTVALUE_MUSTBE_GREATERTHANZERO;

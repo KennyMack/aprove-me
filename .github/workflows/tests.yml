@@ -2,24 +2,35 @@ name: Test Banki-me api
 
 on:
   push:
-    branches: ['main']
+    branches: ['dev']
   pull_request:
     branches: ['main']
 
 jobs:
   testing:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api/bankme-api
 
     strategy:
       matrix:
         node-version: [18.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Copy repository
+        uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
-        with: node-version ${{ matrix.node-version }}
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install yarn
+        run: npm install -g yarn
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Run tests
+        run: yarn run test

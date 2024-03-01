@@ -15,6 +15,7 @@ export class PayableMocks {
       payable.emissionDate = new Date();
       payable.createdAt = new Date();
       payable.updateAt = new Date();
+      payables.push(payable);
     }
 
     return payables;
@@ -35,7 +36,6 @@ export class PayableMocks {
     payable: Payable,
     assignor: Assignor,
   ): PayableVO {
-    if (!payable) return null;
     return new PayableVO(
       payable.id,
       payable.value,

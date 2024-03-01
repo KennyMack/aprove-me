@@ -22,12 +22,23 @@ export class AssignorDomainService
   }
 
   async validate(data: AssignorVO): Promise<boolean> {
-    if (!BasicValidations.isValidCNPJOrCPF(data.document))
+    const { id, name, phone, email, document } = data;
+
+    if (!name || !phone || !email || !document) {
+      super.addError(Fails.INVALID_ASSIGNOR);
+      return false;
+    }
+
+    const validationError = data.isValid();
+
+    if (validationError) super.addError(validationError);
+
+    if (!BasicValidations.isValidCNPJOrCPF(document))
       super.addError(Fails.INVALID_DOCUMENT);
 
     const resultValidation = await Promise.all([
-      this.assignorRepo.documentExists(data.document),
-      this.assignorRepo.emailExists(data.email),
+      this.assignorRepo.documentExists(id, document),
+      this.assignorRepo.emailExists(id, data.email),
     ]);
 
     if (resultValidation[0]) super.addError(Fails.DOCUMENT_ALREADY_EXISTS);
@@ -41,7 +52,7 @@ export class AssignorDomainService
     if (!isValid) return null;
 
     const assignorData = new Assignor();
-    assignorData.id = data.id ?? Sequence.getNext();
+    assignorData.id = data.id || Sequence.getNext();
     assignorData.document = data.document;
     assignorData.email = data.email;
     assignorData.phone = data.phone;
@@ -50,16 +61,47 @@ export class AssignorDomainService
     return await this.assignorRepo.create(assignorData);
   }
 
+  async changeById(id: string, data: AssignorVO): Promise<Assignor> {
+    const isValid = await this.validate(data);
+    if (!isValid) return null;
+
+    const assignorDb = await this.assignorRepo.getById(id);
+
+    if (assignorDb == null) super.addError(Fails.INVALID_ASSIGNOR_ID);
+
+    if (super.getErrors().length) return null;
+
+    const assignorData = new Assignor();
+    assignorData.id = id;
+    assignorData.document = data.document;
+    assignorData.email = data.email;
+    assignorData.phone = data.phone;
+    assignorData.name = data.name;
+    assignorData.createdAt = assignorDb.createdAt;
+    assignorData.updateAt = new Date();
+
+    return await this.assignorRepo.changeById(id, assignorData);
+  }
+
   async getAll(): Promise<AssignorVO[]> {
-    const result = await this.assignorRepo.getAll<Assignor>();
+    const result = await this.assignorRepo.getAll();
 
     return result.map(
-      (x) => new AssignorVO(x.id, x.document, x.email, x.phone, x.name),
+      (x) =>
+        new AssignorVO(
+          x.id,
+          x.document,
+          x.email,
+          x.phone,
+          x.name,
+          x.createdAt,
+          x.updateAt,
+        ),
     );
   }
 
   async getById(id: string): Promise<AssignorVO> {
-    const result = await this.assignorRepo.getById<Assignor>(id);
+    const result = await this.assignorRepo.getById(id);
 
     if (result == null) return null;
 
@@ -69,6 +111,8 @@ export class AssignorDomainService
       result.email,
       result.phone,
       result.name,
+      result.createdAt,
+      result.updateAt,
     );
   }
 
@@ -82,6 +126,8 @@ export class AssignorDomainService
       removed.email,
       removed.phone,
       removed.name,
+      removed.createdAt,
+      removed.updateAt,
     );
   }
 }
