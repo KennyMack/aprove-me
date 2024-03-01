@@ -12,6 +12,7 @@ import { Sequence } from './sequence';
 import { HttpResult } from './http/http-result';
 import { AssignorDomainService } from './domains/assignors/assignor-service';
 import { UserRepository } from './infra/database/repositories/user-repository';
+import { UserDomainService } from './domains/users/user-service';
 
 @Module({
   providers: [
@@ -28,6 +29,7 @@ import { UserRepository } from './infra/database/repositories/user-repository';
     AssignorRepository,
     AssignorDomainService,
     UserRepository,
+    UserDomainService,
   ],
   exports: [
     CoreService,
@@ -43,6 +45,7 @@ import { UserRepository } from './infra/database/repositories/user-repository';
     AssignorRepository,
     AssignorDomainService,
     UserRepository,
+    UserDomainService,
   ],
 })
 export class CoreModule {}

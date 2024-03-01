@@ -5,9 +5,10 @@ import { CoreModule } from 'bme/core';
 import { AuthModule } from './auth/auth.module';
 import { AssignorModule } from './assignor/assignor.module';
 import { PayableModule } from './payable/payable.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [CoreModule, AuthModule, AssignorModule, PayableModule],
+  imports: [CoreModule, AuthModule, AssignorModule, PayableModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
 })

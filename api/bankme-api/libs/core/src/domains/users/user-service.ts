@@ -7,6 +7,7 @@ import { User } from './entities/users.entity';
 import { UserVO } from './vos/user.vo';
 import { Fails } from 'bme/core/messages/fails';
 import { Sequence } from 'bme/core/sequence';
+import { AuthVO } from './vos/auth.vo';
 
 @Injectable()
 export class UserDomainService
@@ -19,6 +20,11 @@ export class UserDomainService
   ) {
     super();
   }
+
+  auth(login: string, password: string): Promise<AuthVO> {
+    throw new Error('Method not implemented.');
+  }
+
   async validate(data: UserVO): Promise<boolean> {
     const validationError = data.isValid();
 

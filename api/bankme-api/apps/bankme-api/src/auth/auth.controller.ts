@@ -9,10 +9,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { AuthUserDto } from './dto/auth-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
+import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
+import { authUserSchema } from 'bme/core/domains/users/entities/users.schema';
 
 @Controller('integrations/auth')
 @ApiTags('Authentication')
@@ -21,54 +22,12 @@ export class AuthController {
 
   @Post()
   @ApiResponse({
-    status: 201,
-    description: 'Create an user',
-    type: CreateAuthDto,
+    status: 200,
+    description: 'Authenticate',
+    type: AuthUserDto,
   })
   @UseInterceptors(HttpStatusInterceptor)
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
-  }
-
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Get user list',
-    isArray: true,
-    type: CreateAuthDto,
-  })
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  @ApiResponse({
-    status: 200,
-    description: 'Get user By Id',
-    type: CreateAuthDto,
-  })
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiResponse({
-    status: 200,
-    description: 'Change user By Id',
-    type: UpdateAuthDto,
-  })
-  @UseInterceptors(HttpStatusInterceptor)
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  @ApiResponse({
-    status: 200,
-    description: 'Remove user By Id',
-    type: CreateAuthDto,
-  })
-  remove(@Param('id') id: string) {
-    return this.authService.remove(id);
+  auth(@Body(new ZodValidationPipe(authUserSchema)) authUserDto: AuthUserDto) {
+    return this.authService.auth(authUserDto);
   }
 }
