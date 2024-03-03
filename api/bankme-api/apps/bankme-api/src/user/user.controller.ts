@@ -11,12 +11,13 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import { createUserSchema } from 'bme/core/domains/users/entities/users.schema';
 
 @Controller('integrations/user')
+@ApiBearerAuth()
 @ApiTags('User')
 export class UserController {
   constructor(private readonly userService: UserService) {}

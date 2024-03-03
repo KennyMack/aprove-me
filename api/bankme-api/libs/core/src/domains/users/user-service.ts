@@ -34,7 +34,11 @@ export class UserDomainService
       this.addError(Fails.INVALID_LOGIN_OR_PASSWORD);
     }
 
-    return new AuthVO('', passwordValid);
+    return new AuthVO(
+      passwordValid ? user?.id : '',
+      passwordValid ? user?.login : '',
+      passwordValid,
+    );
   }
 
   async validate(data: UserVO): Promise<boolean> {

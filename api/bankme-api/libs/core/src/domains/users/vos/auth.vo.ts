@@ -1,6 +1,7 @@
 export class AuthVO {
   constructor(
-    readonly jwt: string,
+    readonly id: string,
+    readonly login: string,
     readonly success: boolean,
   ) {}
 }

@@ -3,12 +3,14 @@ import { UserDomainService } from 'bme/core/domains/users/user-service';
 import { IUserDomainService } from 'bme/core/domains/users/interfaces/user-service.interface';
 import { HttpResult } from 'bme/core/http/http-result';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(UserDomainService)
     protected userService: IUserDomainService,
+    private jwtService: JwtService,
   ) {}
 
   async auth(userAuthDto: AuthUserDto) {
@@ -30,7 +32,12 @@ export class AuthService {
           this.userService.getErrors(),
         );
 
-      return HttpResult.Ok(authResult);
+      return HttpResult.Ok({
+        token: await this.jwtService.signAsync({
+          sub: authResult.id,
+          login: authResult.login,
+        }),
+      });
     } catch (e) {
       return HttpResult.Unauthorized(
         {

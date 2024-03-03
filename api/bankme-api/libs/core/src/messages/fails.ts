@@ -19,4 +19,5 @@ export class Fails {
   static INVALID_LOGIN = 'Login informado inválido.';
   static INVALID_PASSWORD = 'Senha informada inválida.';
   static INVALID_LOGIN_OR_PASSWORD = 'Login e/ou senha inválido.';
+  static UNAUTHORIZED = 'Unauthorized';
 }

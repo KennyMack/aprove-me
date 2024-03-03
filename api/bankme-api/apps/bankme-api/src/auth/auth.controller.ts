@@ -14,12 +14,14 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import { authUserSchema } from 'bme/core/domains/users/entities/users.schema';
+import { AllowAnonymous } from '../decorators/allow-anonymous.decorator';
 
 @Controller('integrations/auth')
 @ApiTags('Authentication')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @AllowAnonymous()
   @Post()
   @ApiResponse({
     status: 200,

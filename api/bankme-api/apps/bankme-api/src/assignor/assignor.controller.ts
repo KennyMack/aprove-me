@@ -11,7 +11,7 @@ import {
 import { AssignorService } from './assignor.service';
 import { CreateAssignorDto } from './dto/create-assignor.dto';
 import { UpdateAssignorDto } from './dto/update-assignor.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import {
   changeAssignorSchema,
@@ -20,6 +20,7 @@ import {
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 
 @Controller('integrations/assignor')
+@ApiBearerAuth()
 @ApiTags('Assignor')
 export class AssignorController {
   constructor(private readonly assignorService: AssignorService) {}

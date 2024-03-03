@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PayableService } from './payable.service';
 import { CreatePayableDto } from './dto/create-payable.dto';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import {
@@ -20,6 +20,7 @@ import {
 import { UpdatePayableDto } from './dto/update-payable.dto';
 
 @Controller('integrations/payable')
+@ApiBearerAuth()
 @ApiTags('Payable')
 export class PayableController {
   constructor(private readonly payableService: PayableService) {}

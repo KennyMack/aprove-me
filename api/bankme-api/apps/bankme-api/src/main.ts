@@ -11,7 +11,7 @@ async function bootstrap() {
       'Api for application test to try get a chance to join in bankme',
     )
     .setVersion('1.0')
-    .addTag('Bankme')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
