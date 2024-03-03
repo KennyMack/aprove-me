@@ -30,7 +30,7 @@ export class AuthService {
           this.userService.getErrors(),
         );
 
-      return HttpResult.Created(authResult);
+      return HttpResult.Ok(authResult);
     } catch (e) {
       return HttpResult.UnprocessableEntity(
         {

@@ -22,8 +22,19 @@ export class UserDomainService
     super();
   }
 
-  auth(login: string, password: string): Promise<AuthVO> {
-    throw new Error('Method not implemented.');
+  async auth(login: string, password: string): Promise<AuthVO> {
+    const user = await this.userRepo.getByLogin(login);
+    let passwordValid = false;
+
+    if (user) {
+      passwordValid = MordorCripto.Compare(password, user.password);
+    }
+
+    if (!passwordValid) {
+      this.addError(Fails.INVALID_LOGIN_OR_PASSWORD);
+    }
+
+    return new AuthVO('', passwordValid);
   }
 
   async validate(data: UserVO): Promise<boolean> {

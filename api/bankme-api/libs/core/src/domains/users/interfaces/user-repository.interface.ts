@@ -6,4 +6,5 @@ export interface IUserRepository
   extends IWriterRepository<User>,
     IReaderRepository<User> {
   existsLogin(id: string, login: string): Promise<boolean>;
+  getByLogin(login: string): Promise<User>;
 }
