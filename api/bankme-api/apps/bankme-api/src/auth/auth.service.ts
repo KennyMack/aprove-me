@@ -23,7 +23,7 @@ export class AuthService {
       const errors = this.userService.getErrors();
 
       if (errors.length)
-        return HttpResult.BadRequest(
+        return HttpResult.Unauthorized(
           {
             login: userAuthDto.login,
           },
@@ -32,7 +32,7 @@ export class AuthService {
 
       return HttpResult.Ok(authResult);
     } catch (e) {
-      return HttpResult.UnprocessableEntity(
+      return HttpResult.Unauthorized(
         {
           login: userAuthDto.login,
         },

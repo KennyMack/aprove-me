@@ -18,4 +18,8 @@ export class HttpResult {
   public static UnprocessableEntity(body: any, errors: string[]): HttpVO {
     return new HttpVO(false, HttpStatus.UNPROCESSABLE_ENTITY, body, errors);
   }
+
+  public static Unauthorized(body: any, errors: string[]): HttpVO {
+    return new HttpVO(false, HttpStatus.UNAUTHORIZED, body, errors);
+  }
 }
