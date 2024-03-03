@@ -5,6 +5,8 @@ import { ptBR } from 'date-fns/locale';
 
 export class BasicValidations {
   public static isValidDate(date: string | Date): boolean {
+    if (!date) return false;
+
     let dtValue: string = date.toString();
     if (!(typeof date === 'string'))
       dtValue = format(date, 'yyyy-MM-dd HH:mm:ss');

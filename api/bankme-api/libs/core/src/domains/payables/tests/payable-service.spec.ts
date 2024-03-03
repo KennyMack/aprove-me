@@ -9,6 +9,8 @@ import { PayableMocks } from './payable-mocks';
 import { AssignorMocks } from '../../assignors/tests/assignor-mocks';
 import { Fails } from 'bme/core/messages/fails';
 import { PayableVO } from '../vos/payable.vo';
+import { format, isValid, parse } from 'date-fns';
+import { ptBR } from 'date-fns/locale/pt-BR';
 
 describe('PayableDomainService', () => {
   let service: PayableDomainService;
@@ -30,14 +32,66 @@ describe('PayableDomainService', () => {
   });
 
   describe('PayableDomainService.isValid()', () => {
-    it('should be a invalid PayableVO: INVALID_ASSIGNOR', async () => {
-      const payable = PayableMocks.getPayable();
+    it('should be a invalid PayableVO', async () => {
+      let payable = PayableMocks.getPayable();
       payable.assignorId = null;
-      const vo = PayableMocks.convertPayableToVO(payable, null);
+      let vo = PayableMocks.convertPayableToVO(payable, null);
 
-      const result = await service.validate(vo);
+      let result = await service.validate(vo);
 
       expect(service.getLastError()).toStrictEqual(Fails.INVALID_ASSIGNOR);
+      expect(result).toStrictEqual(false);
+
+      service.resetDomain();
+      payable = PayableMocks.getPayable();
+      payable.emissionDate = null;
+
+      vo = PayableMocks.convertPayableToVO(payable, null);
+
+      result = await service.validate(vo);
+
+      expect(service.getLastError()).toStrictEqual(Fails.INVALID_EMISSIONDATE);
+      expect(result).toStrictEqual(false);
+
+      service.resetDomain();
+      payable = PayableMocks.getPayable();
+      payable.value = 0;
+
+      vo = PayableMocks.convertPayableToVO(payable, null);
+
+      result = await service.validate(vo);
+
+      expect(service.getLastError()).toStrictEqual(
+        Fails.PAYMENTVALUE_MUSTBE_GREATERTHANZERO,
+      );
+      expect(result).toStrictEqual(false);
+
+      service.resetDomain();
+      payable = PayableMocks.getPayable();
+      let assignor = AssignorMocks.getAssignor();
+      payable.assignorId = null;
+      assignor.document = '';
+
+      vo = PayableMocks.convertPayableToVO(payable, assignor);
+
+      result = await service.validate(vo);
+
+      expect(service.getErrors().length).toBeGreaterThanOrEqual(1);
+      expect(service.getLastError()).toStrictEqual(Fails.INVALID_DOCUMENT);
+      expect(result).toStrictEqual(false);
+
+      service.resetDomain();
+      payable = PayableMocks.getPayable();
+      assignor = AssignorMocks.getAssignor();
+      payable.assignorId = null;
+      assignor.email = 'email';
+
+      vo = PayableMocks.convertPayableToVO(payable, assignor);
+
+      result = await service.validate(vo);
+
+      expect(service.getErrors().length).toBeGreaterThanOrEqual(1);
+      expect(service.getLastError()).toStrictEqual(Fails.INVALID_EMAIL);
       expect(result).toStrictEqual(false);
     });
 
