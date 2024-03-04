@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { mock, mockReset } from 'jest-mock-extended';
 import { IUserDomainService } from 'bme/core/domains/users/interfaces/user-service.interface';
 import { UserDomainService } from 'bme/core/domains/users/user-service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -13,6 +14,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: UserDomainService, useValue: userDomainService },
+        JwtService,
       ],
     }).compile();
 
