@@ -59,7 +59,7 @@ export class UserDomainService
     return true;
   }
 
-  async create(data: UserVO): Promise<User> {
+  async create(data: UserVO): Promise<UserVO> {
     const isValid = await this.validate(data);
     if (!isValid) return null;
 
@@ -68,10 +68,18 @@ export class UserDomainService
     assignorData.login = data.login;
     assignorData.password = MordorCripto.Encrypt(data.password);
 
-    return await this.userRepo.create(assignorData);
+    const result = await this.userRepo.create(assignorData);
+
+    return new UserVO(
+      result.id,
+      result.login,
+      '',
+      result.createdAt,
+      result.updateAt,
+    );
   }
 
-  async changeById(id: string, data: UserVO): Promise<User> {
+  async changeById(id: string, data: UserVO): Promise<UserVO> {
     const isValid = await this.validate(data);
     if (!isValid) return null;
 
@@ -88,7 +96,15 @@ export class UserDomainService
     userData.createdAt = userDb.createdAt;
     userData.updateAt = new Date();
 
-    return await this.userRepo.changeById(id, userData);
+    const result = await this.userRepo.changeById(id, userData);
+
+    return new UserVO(
+      result.id,
+      result.login,
+      '',
+      result.createdAt,
+      result.updateAt,
+    );
   }
 
   async getAll(): Promise<UserVO[]> {
