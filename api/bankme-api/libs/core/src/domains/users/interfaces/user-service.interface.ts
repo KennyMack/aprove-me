@@ -1,6 +1,7 @@
 import { IErrorDomainService } from 'bme/core/infra/errors/error-domain-service.interface';
 import { UserVO } from '../vos/user.vo';
 import { User } from '../entities/users.entity';
+import { AuthVO } from '../vos/auth.vo';
 
 export interface IUserDomainService extends IErrorDomainService {
   validate(data: UserVO): Promise<boolean>;
@@ -9,4 +10,5 @@ export interface IUserDomainService extends IErrorDomainService {
   removeById(id: string): Promise<UserVO>;
   getAll(): Promise<UserVO[]>;
   getById(id: string): Promise<UserVO>;
+  auth(login: string, password: string): Promise<AuthVO>;
 }

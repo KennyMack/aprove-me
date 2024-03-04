@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PayableService } from './payable.service';
 import { CreatePayableDto } from './dto/create-payable.dto';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import {
@@ -20,6 +20,7 @@ import {
 import { UpdatePayableDto } from './dto/update-payable.dto';
 
 @Controller('integrations/payable')
+@ApiBearerAuth()
 @ApiTags('Payable')
 export class PayableController {
   constructor(private readonly payableService: PayableService) {}
@@ -44,6 +45,7 @@ export class PayableController {
     description: 'Change a payable by id',
     type: UpdatePayableDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   update(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(changePayableSchema))
@@ -59,6 +61,7 @@ export class PayableController {
     type: CreatePayableDto,
     isArray: true,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   findAll() {
     return this.payableService.findAll();
   }
@@ -69,6 +72,7 @@ export class PayableController {
     description: 'Get Payable by Id',
     type: CreatePayableDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   findOne(@Param('id') id: string) {
     return this.payableService.findOne(id);
   }
@@ -79,6 +83,7 @@ export class PayableController {
     description: 'Remove payable By Id',
     type: CreatePayableDto,
   })
+  @UseInterceptors(HttpStatusInterceptor)
   remove(@Param('id') id: string) {
     return this.payableService.remove(id);
   }

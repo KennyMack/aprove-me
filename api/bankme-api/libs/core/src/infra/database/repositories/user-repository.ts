@@ -6,6 +6,13 @@ import { User } from 'bme/core/domains/users/entities/users.entity';
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(protected prisma: PrismaService) {}
+  async getByLogin(login: string): Promise<User> {
+    return await this.prisma.user.findFirst({
+      where: {
+        login,
+      },
+    });
+  }
 
   async existsLogin(id: string, login: string): Promise<boolean> {
     const result = await this.prisma.user.count({
