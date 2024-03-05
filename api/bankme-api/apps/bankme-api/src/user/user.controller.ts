@@ -15,6 +15,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import { createUserSchema } from 'bme/core/domains/users/entities/users.schema';
+import { AllowAnonymous } from '../decorators/allow-anonymous.decorator';
 
 @Controller('integrations/user')
 @ApiBearerAuth()
@@ -22,6 +23,7 @@ import { createUserSchema } from 'bme/core/domains/users/entities/users.schema';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @AllowAnonymous()
   @Post()
   @ApiResponse({
     status: 201,

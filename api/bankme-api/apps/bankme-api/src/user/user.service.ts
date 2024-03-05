@@ -5,6 +5,7 @@ import { UserDomainService } from 'bme/core/domains/users/user-service';
 import { IUserDomainService } from 'bme/core/domains/users/interfaces/user-service.interface';
 import { UserVO } from 'bme/core/domains/users/vos/user.vo';
 import { HttpResult } from 'bme/core/http/http-result';
+import { AuthVO } from 'bme/core/domains/users/vos/auth.vo';
 
 @Injectable()
 export class UserService {
