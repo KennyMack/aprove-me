@@ -10,3 +10,5 @@ services:
       - path: ./bankme-api/.env
     ports:
       - '3000:3000'
+    volumes:
+      - ./bankme-api/prisma:/prisma

@@ -9,3 +9,4 @@ dist
 npm-debug.log
 dist
 README.md
+prisma/db/dev.db
