@@ -20,5 +20,8 @@ async function bootstrap() {
     process.env.PORT || 3000,
     process.env.ENV === 'PRODUCTION' ? '0.0.0.0' : undefined,
   );
+  console.log(process.env.PORT);
+  console.log(process.env.VHOST_RABBIT);
+  console.log(process.env.DATABASE_URL);
 }
 bootstrap();
