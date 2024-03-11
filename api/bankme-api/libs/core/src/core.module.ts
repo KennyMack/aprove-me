@@ -13,9 +13,9 @@ import { HttpResult } from './http/http-result';
 import { AssignorDomainService } from './domains/assignors/assignor-service';
 import { UserRepository } from './infra/database/repositories/user-repository';
 import { UserDomainService } from './domains/users/user-service';
-import { RabbitMQService } from './infra/rabbitmq/rabbit-mq.service';
 import { PayableQueue } from './infra/rabbitmq/queues/payable.queue';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RedeliveryMessages } from './infra/rabbitmq/redelivery';
 
 @Module({
   imports: [EventEmitterModule.forRoot()],
@@ -23,7 +23,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     CoreService,
     Success,
     Fails,
-    RabbitMQService,
     PrismaService,
     Payable,
     PayableVO,
@@ -36,13 +35,13 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserRepository,
     UserDomainService,
     PayableQueue,
+    RedeliveryMessages,
   ],
   exports: [
     CoreService,
     Success,
     Fails,
     PrismaService,
-    RabbitMQService,
     Payable,
     PayableVO,
     PayableRepository,
@@ -54,6 +53,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserRepository,
     UserDomainService,
     PayableQueue,
+    RedeliveryMessages,
   ],
 })
 export class CoreModule {}

@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { RabbitMQService } from 'bme/core/infra/rabbitmq/rabbit-mq.service';
+import { IQueue } from 'bme/core/infra/rabbitmq/queue.interface';
+import { PayableQueue } from 'bme/core/infra/rabbitmq/queues/payable.queue';
 
 @Injectable()
 export class PayableConsumerService {
-  constructor(readonly rabbit: RabbitMQService) {}
+  constructor(
+    @Inject(PayableQueue)
+    readonly rabbit: IQueue,
+  ) {}
   getHello(): string {
     return 'Hello World!';
   }
