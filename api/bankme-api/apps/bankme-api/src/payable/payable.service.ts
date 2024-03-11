@@ -9,6 +9,7 @@ import { AssignorVO } from 'bme/core/domains/assignors/vos/assignor.vo';
 import { AssignorDomainService } from 'bme/core/domains/assignors/assignor-service';
 import { IAssignorDomainService } from 'bme/core/domains/assignors/interfaces/assignor-service.interface';
 import { UpdatePayableDto } from './dto/update-payable.dto';
+import { BatchPayableDto } from './dto/create-batch.payable.dto';
 
 @Injectable()
 export class PayableService {
@@ -18,6 +19,12 @@ export class PayableService {
     @Inject(AssignorDomainService)
     protected assignorService: IAssignorDomainService,
   ) {}
+
+  async batch(createBatchPayableDto: BatchPayableDto): Promise<HttpVO> {
+    this.payableService.resetDomain();
+
+    return HttpResult.Created(createBatchPayableDto);
+  }
 
   async create(createPayableDto: CreatePayableDto): Promise<HttpVO> {
     let assignorVO: AssignorVO;

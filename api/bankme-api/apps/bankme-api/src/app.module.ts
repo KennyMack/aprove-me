@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { CoreModule } from 'bme/core';
 import { AuthModule } from './auth/auth.module';
 import { AssignorModule } from './assignor/assignor.module';
@@ -20,6 +19,6 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: AuthenticatedGuard }],
+  providers: [{ provide: APP_GUARD, useClass: AuthenticatedGuard }],
 })
 export class AppModule {}

@@ -21,6 +21,10 @@ export const createPayableSchema = z.object({
     .optional(),
 });
 
+export const batchPayableSchema = z.object({
+  payables: z.array(createPayableSchema),
+});
+
 export const changePayableSchema = z.object({
   id: z.string().uuid(),
   value: z.coerce.number(),
