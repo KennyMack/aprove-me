@@ -8,6 +8,7 @@ import {
   ConfirmChannel,
 } from 'amqplib';
 import { RedeliveryMessages } from './redelivery';
+import { Sequence } from 'bme/core/sequence';
 
 export type optionsQueue = {
   isJson?: boolean;
@@ -24,8 +25,6 @@ export abstract class RabbitMQService implements OnApplicationShutdown {
   private connUrlString: ConnectionUrl;
   private channel: ChannelWrapper;
   private connection: IAmqpConnectionManager;
-  private _exchange: string;
-  private _queue: string;
 
   constructor(
     protected eventEmitter: EventEmitter2,
@@ -80,15 +79,43 @@ export abstract class RabbitMQService implements OnApplicationShutdown {
     await ch.bindQueue(queueName, exchangeName, routingKey, {});
   }
 
+  private async createDeadLetter(
+    ch: ConfirmChannel,
+    exchangeName: string,
+    options: optionsQueue,
+  ) {
+    if ((options.deadLetterExchange || '') && (options.deadLetterQueue || '')) {
+      await this.createExchange(
+        ch,
+        exchangeName,
+        'topic',
+        false,
+        options.durable || false,
+      );
+
+      await this.createQueue(
+        ch,
+        options.deadLetterQueue,
+        false,
+        options.durable || false,
+        {},
+      );
+
+      this.bindQueue(
+        ch,
+        options.deadLetterQueue,
+        exchangeName,
+        options.deadLetterRoutingKey,
+      );
+    }
+  }
+
   protected async startConsuming(
     exchange: string,
     queue: string,
     routingKey: string,
     options: optionsQueue,
   ) {
-    this._exchange = exchange;
-    this._queue = queue;
-
     this.connection = connect([this.getConnectioUrl()]);
 
     const queueArgs = {};
@@ -109,7 +136,7 @@ export abstract class RabbitMQService implements OnApplicationShutdown {
       setup: async (ch: ConfirmChannel) => {
         await this.createExchange(
           ch,
-          this._exchange,
+          exchange,
           'topic',
           false,
           options.durable || false,
@@ -117,43 +144,17 @@ export abstract class RabbitMQService implements OnApplicationShutdown {
 
         await this.createQueue(
           ch,
-          this._queue,
+          queue,
           false,
           options.durable || false,
           queueArgs,
         );
 
-        await this.bindQueue(ch, this._queue, this._exchange, routingKey);
+        await this.bindQueue(ch, queue, exchange, routingKey);
 
-        if (
-          (options.deadLetterExchange || '') &&
-          (options.deadLetterQueue || '')
-        ) {
-          await this.createExchange(
-            ch,
-            this._exchange,
-            'topic',
-            false,
-            options.durable || false,
-          );
+        await this.createDeadLetter(ch, exchange, options);
 
-          await this.createQueue(
-            ch,
-            options.deadLetterQueue,
-            false,
-            options.durable || false,
-            {},
-          );
-
-          this.bindQueue(
-            ch,
-            options.deadLetterQueue,
-            this._exchange,
-            options.deadLetterRoutingKey,
-          );
-        }
-
-        ch.consume(this._queue, this.handleNewMessage.bind(this), {
+        ch.consume(queue, this.handleNewMessage.bind(this), {
           noAck: false,
         });
       },
@@ -180,16 +181,54 @@ export abstract class RabbitMQService implements OnApplicationShutdown {
     return !(message == null);
   }
 
-  protected ackMessage(message: Message) {
+  public ackMessage(message: Message) {
     if (message == null) return;
     this.channel?.ack(message);
     this.redeliveries.pop(this.getMessageId(message));
   }
 
-  protected nackMessage(message: Message, redelivery: boolean = true) {
+  public nackMessage(message: Message, redelivery: boolean = true) {
     if (message == null) return;
     this.channel?.nack(message, false, redelivery);
     if (!redelivery) this.redeliveries.pop(this.getMessageId(message));
+  }
+
+  public async publishMessage(
+    exchange: string,
+    routingKey: string,
+    messageId: string,
+    data: any,
+    headers: object,
+    options: optionsQueue,
+  ) {
+    const conn = connect([this.getConnectioUrl()]);
+
+    conn.createChannel({
+      json: options.isJson || true,
+      setup: async (ch: ConfirmChannel) => {
+        await this.createExchange(
+          ch,
+          exchange,
+          'topic',
+          false,
+          options.durable || false,
+        );
+
+        await ch.publish(
+          exchange,
+          routingKey,
+          Buffer.from(JSON.stringify(data)),
+          {
+            messageId: messageId,
+            deliveryMode: options.durable || false ? 2 : 1,
+            headers: {
+              ...headers,
+            },
+          },
+        );
+        conn.close();
+      },
+    });
   }
 
   async onApplicationShutdown(signal?: string) {
