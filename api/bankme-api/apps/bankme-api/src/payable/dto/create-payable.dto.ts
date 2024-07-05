@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiBody } from '@nestjs/swagger';
 
 export class CreatePayableAssignorDto {
   @ApiProperty()

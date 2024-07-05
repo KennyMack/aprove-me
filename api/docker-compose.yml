@@ -1,6 +1,27 @@
 version: '3.8'
 
 services:
+  bankme-rabbit:
+    hostname: bankme-rabbit
+    container_name: bankme-rabbit
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    env_file:
+      - path: ./bankme-api/.env
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -I -s -L http://localhost:15672 || exit 1']
+      interval: 30s
+      timeout: 20s
+      retries: 5
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq/mnesia
+    networks:
+      - aprove-me-net
+
   bankme-api:
     build:
       context: ./bankme-api
@@ -12,3 +33,12 @@ services:
       - '3000:3000'
     volumes:
       - ./bankme-api/prisma:/prisma
+    networks:
+      - aprove-me-net
+
+volumes:
+  rabbit_data:
+
+networks:
+  aprove-me-net:
+    driver: bridge

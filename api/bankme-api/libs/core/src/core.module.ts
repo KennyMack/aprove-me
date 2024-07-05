@@ -13,8 +13,12 @@ import { HttpResult } from './http/http-result';
 import { AssignorDomainService } from './domains/assignors/assignor-service';
 import { UserRepository } from './infra/database/repositories/user-repository';
 import { UserDomainService } from './domains/users/user-service';
+import { PayableQueue } from './infra/rabbitmq/queues/payable.queue';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { RedeliveryMessages } from './infra/rabbitmq/redelivery';
 
 @Module({
+  imports: [EventEmitterModule.forRoot()],
   providers: [
     CoreService,
     Success,
@@ -30,6 +34,8 @@ import { UserDomainService } from './domains/users/user-service';
     AssignorDomainService,
     UserRepository,
     UserDomainService,
+    PayableQueue,
+    RedeliveryMessages,
   ],
   exports: [
     CoreService,
@@ -46,6 +52,8 @@ import { UserDomainService } from './domains/users/user-service';
     AssignorDomainService,
     UserRepository,
     UserDomainService,
+    PayableQueue,
+    RedeliveryMessages,
   ],
 })
 export class CoreModule {}

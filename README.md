@@ -8,6 +8,125 @@
 ## Sumário
 
 - [Sumário](#sumário)
+- [Boas vindas](#boasvindas)
+- [Instalação](#instalação)
+  - [Back-end](#i-back-end)
+  - [Front-end](#i-front-end)
+- [Rodando o projeto](#rodando)
+  - [Back-end](#r-back-end)
+- [Acessando a aplicação](#acessando)
+  - [Back-end](#a-back-end)
+- [Etapas concluídas](#etapas)
+
+## Boas vindas
+
+Esse arquivo tem o objetivo de organizar e otimizar o processo de instalação inicial da aplicação.
+
+A aplicação pode ser iniciado utilizando o docker ou diretamente pelo node
+
+## Instalação
+
+Após realizar o clone do repositório [Aprova-me](https://github.com/KennyMack/aprove-me.git) siga as instruções a seguir.
+
+### Back-end
+
+##### 1.0 Raiz do projeto
+
+Acesse a pasta raiz do projeto do back-end na pasta (`/api/bankme-api`)
+
+##### 1.1 Dependencias
+
+Poderá ser utilizado o `yarn` ou `npm` para gerenciar as dependencias
+
+```bash
+{
+  npm install
+}
+```
+
+```bash
+{
+  yarn install
+}
+```
+
+##### 1.2 Variávies de ambiente
+
+Deverá ser criado na pasta (`/api/bankme-api`) um arquivo `.env` para que seja definidas as configurações da api, abaixo as váriaveis necessárias para o projeto
+
+| VARIÁVEL      | VALOR               |
+| ------------- | ------------------- |
+| DATABASE_URL  | "file:db/dev.db"    |
+| PORT          | 3000                |
+| ENV           | "PRODUCTION"        |
+| MORDOR_PHRASE | "&Édfefef3ffefe33f" |
+
+> Obs: Os valores acima são ficticios
+
+## Rodando o projeto
+
+### Back-end
+
+O back-end pode ser iniado diretamente do `terminal` ou usando `docker-compose`
+
+##### Terminal
+
+No terminal rode o comando abaixo para iniciar a api
+
+```bash
+{
+  npm run start:prod
+}
+```
+
+```bash
+{
+  yarn run start:prod
+}
+```
+
+##### Docker
+
+No teminal rode o comando abaixo para iniciar a api
+
+```bash
+{
+  docker-compose up -d --build
+}
+```
+
+## Acessando a aplicação
+
+### Back-end
+
+Após concluir os passos anteriores será possível acessar a api pelo link (`http:\\localhost:3000`) no navegador e consultar as operações disponíveis pelo `swagger`
+
+## Etapas concluídas
+
+##### Backend
+
+- [x] 1 - Validação
+- [x] 2 - Persistência
+- [x] 3 - Testes
+- [x] 4 - Autenticação
+- [x] 5 - Gerenciamento de permissões
+- [x] 6 - Infra e doc
+- [ ] 7 - lotes
+- [ ] 8 - resiliência
+- [ ] 9 - cloud
+- [ ] 10 - infra as a code
+
+##### Frontend
+
+- [ ] 1 - Cadastro
+- [ ] 2 - Conectando na API
+- [ ] 3 - Listando
+- [ ] 4 - Autenticação
+- [ ] 5 - Testes
+
+## Detalhes do desafio
+
+- [Sumário](#sumário)
 - [❤️ Bem vindos](#️-bem-vindos)
 - [🚀 Vamos nessa!](#-vamos-nessa)
   - [Dicas](#dicas)
@@ -34,7 +153,7 @@
   - [Nível 4 - Autenticação](#nível-4---autenticação-1)
   - [Nível 5 - Testes](#nível-5---testes)
 
-## ❤️ Bem vindos 
+## ❤️ Bem vindos
 
 Olá, tudo certo?
 
@@ -87,7 +206,7 @@ Os recebíveis são representações digitais de um documento que simula uma dí
 ### Estrutura de um recebível
 
 | CAMPO        | TIPO          | DESCRIÇÃO                                 |
-|--------------|---------------|-------------------------------------------|
+| ------------ | ------------- | ----------------------------------------- |
 | id           | string (UUID) | É a identificação de um recebível.        |
 | value        | float         | É o valor do recebível.                   |
 | emissionDate | date          | É a data de emissão do recebível.         |
@@ -96,7 +215,7 @@ Os recebíveis são representações digitais de um documento que simula uma dí
 ### Estrutrua de um cedente
 
 | CAMPO    | TIPO        | DESCRIÇÃO                             |
-|----------|-------------|---------------------------------------|
+| -------- | ----------- | ------------------------------------- |
 | document | string(30)  | É o documento CPF ou CNPJ do cedente. |
 | email    | string(140) | É o email do cedente.                 |
 | phone    | string(20)  | É o telefone do cedente.              |

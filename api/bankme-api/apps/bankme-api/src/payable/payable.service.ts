@@ -9,6 +9,10 @@ import { AssignorVO } from 'bme/core/domains/assignors/vos/assignor.vo';
 import { AssignorDomainService } from 'bme/core/domains/assignors/assignor-service';
 import { IAssignorDomainService } from 'bme/core/domains/assignors/interfaces/assignor-service.interface';
 import { UpdatePayableDto } from './dto/update-payable.dto';
+import { BatchPayableDto } from './dto/create-batch.payable.dto';
+import { PayableQueue } from 'bme/core/infra/rabbitmq/queues/payable.queue';
+import { IPublishQueue } from 'bme/core/infra/rabbitmq/publish-queue.interface';
+import { Sequence } from 'bme/core/sequence';
 
 @Injectable()
 export class PayableService {
@@ -17,7 +21,21 @@ export class PayableService {
     protected payableService: IPayableDomainService,
     @Inject(AssignorDomainService)
     protected assignorService: IAssignorDomainService,
+    @Inject(PayableQueue)
+    protected payableQueue: IPublishQueue,
   ) {}
+
+  async batch(createBatchPayableDto: BatchPayableDto): Promise<HttpVO> {
+    this.payableService.resetDomain();
+
+    await this.payableQueue.publish(
+      Sequence.getNext(),
+      createBatchPayableDto,
+      {},
+    );
+
+    return HttpResult.Created(createBatchPayableDto);
+  }
 
   async create(createPayableDto: CreatePayableDto): Promise<HttpVO> {
     let assignorVO: AssignorVO;

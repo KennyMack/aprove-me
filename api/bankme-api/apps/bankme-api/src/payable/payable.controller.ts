@@ -14,14 +14,18 @@ import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { HttpStatusInterceptor } from '../interceptors/http-status.interceptor';
 import { ZodValidationPipe } from 'bme/core/infra/pipes/zod-validation.pipe';
 import {
+  batchPayableSchema,
   changePayableSchema,
   createPayableSchema,
 } from 'bme/core/domains/payables/entities/payable.schema';
 import { UpdatePayableDto } from './dto/update-payable.dto';
+import { BatchPayableDto } from './dto/create-batch.payable.dto';
+import { AllowAnonymous } from '../decorators/allow-anonymous.decorator';
 
 @Controller('integrations/payable')
 @ApiBearerAuth()
 @ApiTags('Payable')
+@AllowAnonymous()
 export class PayableController {
   constructor(private readonly payableService: PayableService) {}
 
@@ -37,6 +41,20 @@ export class PayableController {
     createPayableDto: CreatePayableDto,
   ) {
     return this.payableService.create(createPayableDto);
+  }
+
+  @Post('batch')
+  @ApiResponse({
+    status: 201,
+    description: 'Import a batch of payables',
+    type: BatchPayableDto,
+  })
+  @UseInterceptors(HttpStatusInterceptor)
+  batch(
+    @Body(new ZodValidationPipe(batchPayableSchema))
+    batchPayableDto: BatchPayableDto,
+  ) {
+    return this.payableService.batch(batchPayableDto);
   }
 
   @Patch(':id')
